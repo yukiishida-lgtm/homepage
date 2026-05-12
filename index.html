@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>株式会社サンプル | Sample Inc.</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --dark: #1a1a1a;
+      --gray: #555;
+      --light-gray: #f5f5f5;
+      --white: #fff;
+      --accent: #c8a96e;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+      color: var(--black);
+      background: var(--white);
+      line-height: 1.8;
+    }
+
+    /* ========== NAV ========== */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 70px;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px);
+    }
+
+    .nav-logo {
+      color: var(--white);
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 6px;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--white);
+      transition: all 0.3s;
+    }
+
+    /* ========== HERO ========== */
+    #hero {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .hero-slides {
+      display: flex;
+      width: 300%;
+      height: 100%;
+      transition: transform 0.8s cubic-bezier(0.77,0,0.18,1);
+    }
+
+    .hero-slide {
+      width: calc(100% / 3);
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .hero-slide:nth-child(1) { background-color: #1a1a2e; background-image: linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%); }
+    .hero-slide:nth-child(2) { background-color: #0d1117; background-image: linear-gradient(135deg,#0d1117 0%,#161b22 50%,#21262d 100%); }
+    .hero-slide:nth-child(3) { background-color: #1c1c1c; background-image: linear-gradient(135deg,#1c1c1c 0%,#2d2d2d 50%,#3a3a3a 100%); }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .hero-en {
+      font-size: clamp(0.65rem, 1.2vw, 0.85rem);
+      letter-spacing: 0.35em;
+      color: var(--accent);
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 6vw, 5rem);
+      color: var(--white);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      line-height: 1.15;
+      margin-bottom: 24px;
+    }
+
+    .hero-sub {
+      font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+      color: rgba(255,255,255,0.75);
+      letter-spacing: 0.08em;
+      max-width: 520px;
+    }
+
+    .hero-indicators {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+    }
+
+    .hero-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+    }
+
+    .hero-dot.active { background: var(--accent); transform: scale(1.3); }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 36px;
+      right: 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.6);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .hero-scroll::after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 50px;
+      background: rgba(255,255,255,0.5);
+      animation: scrollLine 1.6s ease-in-out infinite;
+    }
+
+    @keyframes scrollLine {
+      0%   { transform: scaleY(0); transform-origin: top; opacity: 1; }
+      50%  { transform: scaleY(1); transform-origin: top; opacity: 1; }
+      51%  { transform: scaleY(1); transform-origin: bottom; }
+      100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+    }
+
+    /* ========== SECTIONS COMMON ========== */
+    section { padding: 100px 40px; }
+
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      line-height: 1.3;
+      margin-bottom: 20px;
+    }
+
+    .section-title-ja {
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+    }
+
+    .divider {
+      width: 40px;
+      height: 2px;
+      background: var(--accent);
+      margin-bottom: 40px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* ========== PHILOSOPHY ========== */
+    #philosophy {
+      background: var(--black);
+      color: var(--white);
+    }
+
+    .philosophy-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .philosophy-quote {
+      font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+      font-weight: 700;
+      line-height: 1.7;
+      letter-spacing: 0.06em;
+      margin-bottom: 48px;
+      padding: 0 20px;
+      border-left: 3px solid var(--accent);
+      border-right: 3px solid var(--accent);
+      color: var(--accent);
+    }
+
+    .philosophy-text {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.75);
+      line-height: 2;
+    }
+
+    /* ========== SERVICES ========== */
+    #services { background: var(--light-gray); }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 60px;
+    }
+
+    .service-card {
+      background: var(--white);
+      padding: 48px 36px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s;
+    }
+
+    .service-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+    .service-card:hover::before { transform: scaleX(1); }
+
+    .service-icon {
+      font-size: 2.4rem;
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    .service-num {
+      position: absolute;
+      top: 24px; right: 28px;
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: rgba(0,0,0,0.05);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .service-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .service-name-ja {
+      font-size: 0.8rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      margin-bottom: 18px;
+    }
+
+    .service-desc {
+      font-size: 0.88rem;
+      color: var(--gray);
+      line-height: 1.9;
+    }
+
+    /* ========== WORKS ========== */
+    #works { background: var(--white); }
+
+    .works-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      margin-top: 60px;
+    }
+
+    .work-item {
+      position: relative;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .work-bg {
+      width: 100%;
+      height: 100%;
+      transition: transform 0.5s ease;
+    }
+
+    .work-item:hover .work-bg { transform: scale(1.08); }
+
+    .work-item:nth-child(1) .work-bg { background: linear-gradient(135deg,#2c3e50,#3498db); }
+    .work-item:nth-child(2) .work-bg { background: linear-gradient(135deg,#1a1a1a,#4a4a4a); }
+    .work-item:nth-child(3) .work-bg { background: linear-gradient(135deg,#2d5016,#4caf50); }
+
+    .work-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 28px;
+      opacity: 0;
+      transition: opacity 0.35s;
+    }
+
+    .work-item:hover .work-overlay { opacity: 1; }
+
+    .work-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .work-tag {
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 2px 8px;
+    }
+
+    .work-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .work-industry {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.65);
+    }
+
+    /* ========== TEAM ========== */
+    #team { background: var(--light-gray); }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 60px;
+    }
+
+    .team-card {
+      background: var(--white);
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+
+    .team-card:hover { transform: translateY(-4px); }
+
+    .team-photo {
+      aspect-ratio: 3/4;
+      background: linear-gradient(135deg,#e0e0e0,#c0c0c0);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .team-photo-inner {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: rgba(255,255,255,0.7);
+      background: inherit;
+    }
+
+    .team-card:nth-child(1) .team-photo { background: linear-gradient(160deg,#1a1a2e,#2d2d5e); }
+    .team-card:nth-child(2) .team-photo { background: linear-gradient(160deg,#0d2137,#1a4a6e); }
+    .team-card:nth-child(3) .team-photo { background: linear-gradient(160deg,#1a2e1a,#2d5e2d); }
+    .team-card:nth-child(4) .team-photo { background: linear-gradient(160deg,#2e1a1a,#5e2d2d); }
+
+    .team-info { padding: 20px; }
+
+    .team-role {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .team-name-ja {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .team-name-en {
+      font-size: 0.72rem;
+      color: var(--gray);
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .team-bio {
+      font-size: 0.78rem;
+      color: var(--gray);
+      line-height: 1.75;
+    }
+
+    /* ========== RECRUIT ========== */
+    #recruit {
+      background: var(--black);
+      color: var(--white);
+      text-align: center;
+    }
+
+    .recruit-inner { max-width: 680px; margin: 0 auto; }
+
+    .recruit-inner .section-title { color: var(--white); }
+
+    .recruit-text {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 48px;
+      line-height: 2;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 16px 48px;
+      font-size: 0.82rem;
+      letter-spacing: 0.2em;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: all 0.3s;
+    }
+
+    .btn-outline-white {
+      color: var(--white);
+      border: 1px solid var(--white);
+    }
+
+    .btn-outline-white:hover {
+      background: var(--white);
+      color: var(--black);
+    }
+
+    .btn-filled {
+      background: var(--accent);
+      color: var(--white);
+      border: 1px solid var(--accent);
+    }
+
+    .btn-filled:hover {
+      background: transparent;
+      color: var(--accent);
+    }
+
+    /* ========== ABOUT ========== */
+    #about { background: var(--white); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .about-visual {
+      aspect-ratio: 1;
+      background: linear-gradient(135deg,#1a1a2e 0%,#0f3460 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .about-visual-text {
+      font-size: 5rem;
+      font-weight: 800;
+      color: rgba(255,255,255,0.08);
+      letter-spacing: -0.03em;
+      text-align: center;
+      line-height: 1;
+    }
+
+    .about-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin-top: 32px;
+    }
+
+    .about-table tr { border-bottom: 1px solid #eee; }
+
+    .about-table th {
+      text-align: left;
+      padding: 14px 0;
+      width: 120px;
+      color: var(--gray);
+      font-weight: 500;
+      vertical-align: top;
+    }
+
+    .about-table td {
+      padding: 14px 0;
+      line-height: 1.75;
+    }
+
+    /* ========== CONTACT ========== */
+    #contact { background: var(--light-gray); text-align: center; }
+
+    .contact-inner { max-width: 600px; margin: 0 auto; }
+
+    .contact-text {
+      font-size: 0.95rem;
+      color: var(--gray);
+      margin-bottom: 48px;
+      line-height: 2;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      text-align: left;
+    }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+
+    .form-group label {
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      color: var(--gray);
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid #ddd;
+      background: var(--white);
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { border-color: var(--accent); }
+
+    .form-group textarea { resize: vertical; min-height: 140px; }
+
+    .form-submit {
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    /* ========== FOOTER ========== */
+    footer {
+      background: var(--black);
+      color: var(--white);
+      padding: 60px 40px 36px;
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 60px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 32px;
+    }
+
+    .footer-brand-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+
+    .footer-brand-desc {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.8;
+    }
+
+    .footer-nav-title {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    .footer-nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 24px;
+      list-style: none;
+    }
+
+    .footer-nav-links a {
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      transition: color 0.2s;
+    }
+
+    .footer-nav-links a:hover { color: var(--white); }
+
+    .footer-bottom {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-copy {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.06em;
+    }
+
+    .footer-policy a {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.35);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-policy a:hover { color: var(--white); }
+
+    /* ========== SCROLL ANIMATION ========== */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 900px) {
+      .services-grid { grid-template-columns: 1fr; }
+      .works-grid { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .footer-inner { grid-template-columns: 1fr; gap: 40px; }
+    }
+
+    @media (max-width: 680px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      section { padding: 70px 20px; }
+      .team-grid { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">SAMPLE INC.</a>
+  <ul class="nav-links">
+    <li><a href="#hero">TOP</a></li>
+    <li><a href="#services">SERVICES</a></li>
+    <li><a href="#works">WORKS</a></li>
+    <li><a href="#team">TEAM</a></li>
+    <li><a href="#recruit">RECRUIT</a></li>
+    <li><a href="#about">ABOUT</a></li>
+    <li><a href="#contact">CONTACT</a></li>
+  </ul>
+  <button class="nav-hamburger" onclick="toggleMenu(this)" aria-label="メニュー">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-slides" id="heroSlides">
+    <div class="hero-slide"></div>
+    <div class="hero-slide"></div>
+    <div class="hero-slide"></div>
+  </div>
+  <div class="hero-overlay">
+    <p class="hero-en fade-up">Challenging the Boundaries</p>
+    <h1 class="hero-title fade-up">株式会社サンプル</h1>
+    <p class="hero-sub fade-up">常識を超え、新しい価値を創造する。<br>私たちは挑戦を原動力に、未来を拓いていきます。</p>
+  </div>
+  <div class="hero-indicators" id="heroIndicators">
+    <div class="hero-dot active" onclick="goToSlide(0)"></div>
+    <div class="hero-dot" onclick="goToSlide(1)"></div>
+    <div class="hero-dot" onclick="goToSlide(2)"></div>
+  </div>
+  <div class="hero-scroll">SCROLL</div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section id="philosophy">
+  <div class="philosophy-inner">
+    <p class="section-label fade-up">Our Philosophy</p>
+    <blockquote class="philosophy-quote fade-up">
+      「挑戦することは当たり前、<br>はみ出していくことも常にあること」
+    </blockquote>
+    <p class="philosophy-text fade-up">
+      サンプルとは、群れから外れた一頭の牛を意味します。<br>
+      19世紀アメリカの先駆者たちがそうであったように、<br>
+      私たちは既成概念に縛られることなく、<br>
+      自らの意志で新たな道を切り開き続けます。<br><br>
+      真に価値あるものを世に送り出すために——<br>
+      今日も私たちは、常識の外へ踏み出していきます。
+    </p>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <p class="section-label fade-up">Services</p>
+    <h2 class="section-title fade-up">私たちのサービス</h2>
+    <div class="divider fade-up"></div>
+    <div class="services-grid">
+
+      <div class="service-card fade-up">
+        <span class="service-num">01</span>
+        <span class="service-icon">📊</span>
+        <p class="service-name">Consulting</p>
+        <p class="service-name-ja">戦略コンサルティング</p>
+        <p class="service-desc">
+          経営課題の本質を捉え、独自のフレームワークで
+          戦略策定から実行支援まで一気通貫でサポート。
+          クライアントと共に成長するパートナーとして
+          伴走し続けます。
+        </p>
+      </div>
+
+      <div class="service-card fade-up">
+        <span class="service-num">02</span>
+        <span class="service-icon">🎨</span>
+        <p class="service-name">Marketing & Design</p>
+        <p class="service-name-ja">マーケティング・デザイン</p>
+        <p class="service-desc">
+          ブランドの本質を視覚化し、ターゲットに届く
+          マーケティング戦略を設計。UI/UXデザインから
+          コンテンツ制作まで、一貫したブランド体験を
+          実現します。
+        </p>
+      </div>
+
+      <div class="service-card fade-up">
+        <span class="service-num">03</span>
+        <span class="service-icon">💻</span>
+        <p class="service-name">System Development</p>
+        <p class="service-name-ja">システム開発</p>
+        <p class="service-desc">
+          最新技術スタックを活用した業務システムから
+          Webアプリケーション開発まで対応。スケーラブルで
+          保守性の高いシステムを、アジャイル手法で
+          迅速に構築します。
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WORKS -->
+<section id="works">
+  <div class="container">
+    <p class="section-label fade-up">Works</p>
+    <h2 class="section-title fade-up">実績紹介</h2>
+    <div class="divider fade-up"></div>
+  </div>
+  <div class="works-grid fade-up">
+
+    <div class="work-item">
+      <div class="work-bg"></div>
+      <div class="work-overlay">
+        <div class="work-tags">
+          <span class="work-tag">DX推進</span>
+          <span class="work-tag">ビジネスモデル</span>
+        </div>
+        <p class="work-title">食品メーカー全社DX推進プロジェクト</p>
+        <p class="work-industry">食品・飲料業界</p>
+      </div>
+    </div>
+
+    <div class="work-item">
+      <div class="work-bg"></div>
+      <div class="work-overlay">
+        <div class="work-tags">
+          <span class="work-tag">NFT</span>
+          <span class="work-tag">Web3</span>
+        </div>
+        <p class="work-title">通信キャリア向けNFT活用事業開発</p>
+        <p class="work-industry">情報通信業界</p>
+      </div>
+    </div>
+
+    <div class="work-item">
+      <div class="work-bg"></div>
+      <div class="work-overlay">
+        <div class="work-tags">
+          <span class="work-tag">ブランディング</span>
+          <span class="work-tag">デジタル広告</span>
+        </div>
+        <p class="work-title">広告代理店のブランドリニューアル支援</p>
+        <p class="work-industry">広告・メディア業界</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="container">
+    <p class="section-label fade-up">Team</p>
+    <h2 class="section-title fade-up">チームメンバー</h2>
+    <div class="divider fade-up"></div>
+    <div class="team-grid">
+
+      <div class="team-card fade-up">
+        <div class="team-photo">
+          <div class="team-photo-inner">👤</div>
+        </div>
+        <div class="team-info">
+          <p class="team-role">CEO / Representative Director</p>
+          <p class="team-name-ja">山田 太郎</p>
+          <p class="team-name-en">Taro Yamada</p>
+          <p class="team-bio">大手コンサルファームにて10年以上の経験を積み、独立。戦略立案から組織変革まで幅広い領域をリード。</p>
+        </div>
+      </div>
+
+      <div class="team-card fade-up">
+        <div class="team-photo">
+          <div class="team-photo-inner">👤</div>
+        </div>
+        <div class="team-info">
+          <p class="team-role">COO / Director</p>
+          <p class="team-name-ja">鈴木 花子</p>
+          <p class="team-name-en">Hanako Suzuki</p>
+          <p class="team-bio">外資系IT企業にてプロダクトマネジメントを担当。PMO経験を活かし事業運営を統括。</p>
+        </div>
+      </div>
+
+      <div class="team-card fade-up">
+        <div class="team-photo">
+          <div class="team-photo-inner">👤</div>
+        </div>
+        <div class="team-info">
+          <p class="team-role">CTO / Technical Lead</p>
+          <p class="team-name-ja">佐藤 健</p>
+          <p class="team-name-en">Ken Sato</p>
+          <p class="team-bio">スタートアップでフルスタック開発者として従事。クラウドアーキテクチャ設計のスペシャリスト。</p>
+        </div>
+      </div>
+
+      <div class="team-card fade-up">
+        <div class="team-photo">
+          <div class="team-photo-inner">👤</div>
+        </div>
+        <div class="team-info">
+          <p class="team-role">Creative Director</p>
+          <p class="team-name-ja">田中 美咲</p>
+          <p class="team-name-en">Misaki Tanaka</p>
+          <p class="team-bio">広告代理店にてアートディレクターとして活躍。ブランドアイデンティティ構築を得意とする。</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- RECRUIT -->
+<section id="recruit">
+  <div class="recruit-inner">
+    <p class="section-label fade-up" style="color:var(--accent)">Recruit</p>
+    <h2 class="section-title fade-up">共に挑戦する仲間を<br>募集しています</h2>
+    <div class="divider fade-up" style="margin:0 auto 40px;"></div>
+    <p class="recruit-text fade-up">
+      既成概念にとらわれず、新しいことに挑み続けたい方。<br>
+      自分の力で社会に価値を生み出したい方。<br>
+      私たちと一緒に、まだ誰も見たことのない未来を作りましょう。
+    </p>
+    <a href="#contact" class="btn btn-outline-white fade-up">採用情報を見る</a>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <p class="section-label fade-up">About</p>
+    <h2 class="section-title fade-up">会社概要</h2>
+    <div class="divider fade-up"></div>
+    <div class="about-grid">
+      <div class="about-visual fade-up">
+        <p class="about-visual-text">SAMPLE<br>INC.</p>
+      </div>
+      <div class="fade-up">
+        <table class="about-table">
+          <tr>
+            <th>会社名</th>
+            <td>株式会社サンプル<br><small style="color:#999">Sample Inc.</small></td>
+          </tr>
+          <tr>
+            <th>設立</th>
+            <td>2020年4月1日</td>
+          </tr>
+          <tr>
+            <th>代表取締役</th>
+            <td>山田 太郎</td>
+          </tr>
+          <tr>
+            <th>資本金</th>
+            <td>1,000万円</td>
+          </tr>
+          <tr>
+            <th>所在地</th>
+            <td>〒100-0001<br>東京都千代田区千代田1-1-1<br>サンプルビル 5F</td>
+          </tr>
+          <tr>
+            <th>事業内容</th>
+            <td>経営コンサルティング<br>マーケティング・デザイン支援<br>システム開発・DX推進</td>
+          </tr>
+          <tr>
+            <th>取引実績</th>
+            <td>食品・飲料、情報通信、<br>広告・メディア、金融 他</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <p class="section-label fade-up">Contact</p>
+    <h2 class="section-title fade-up">お問い合わせ</h2>
+    <div class="divider fade-up" style="margin:0 auto 40px;"></div>
+    <p class="contact-text fade-up">
+      サービスに関するご相談、お見積もり依頼など<br>
+      お気軽にご連絡ください。2営業日以内にご返信いたします。
+    </p>
+    <form class="contact-form fade-up" onsubmit="handleSubmit(event)">
+      <div class="form-group">
+        <label>お名前 *</label>
+        <input type="text" placeholder="山田 太郎" required>
+      </div>
+      <div class="form-group">
+        <label>会社名</label>
+        <input type="text" placeholder="株式会社〇〇">
+      </div>
+      <div class="form-group">
+        <label>メールアドレス *</label>
+        <input type="email" placeholder="example@sample.co.jp" required>
+      </div>
+      <div class="form-group">
+        <label>お問い合わせ種別</label>
+        <select>
+          <option value="">選択してください</option>
+          <option>コンサルティングについて</option>
+          <option>マーケティング・デザインについて</option>
+          <option>システム開発について</option>
+          <option>採用について</option>
+          <option>その他</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>お問い合わせ内容 *</label>
+        <textarea placeholder="お問い合わせ内容をご記入ください" required></textarea>
+      </div>
+      <div class="form-submit">
+        <button type="submit" class="btn btn-filled">送信する</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <p class="footer-brand-name">SAMPLE INC.</p>
+      <p class="footer-brand-desc">挑戦することを当たり前とし、<br>常識の枠を超えた価値を創造する。</p>
+    </div>
+    <div>
+      <p class="footer-nav-title">Navigation</p>
+      <ul class="footer-nav-links">
+        <li><a href="#hero">TOP</a></li>
+        <li><a href="#services">SERVICES</a></li>
+        <li><a href="#works">WORKS</a></li>
+        <li><a href="#team">TEAM</a></li>
+        <li><a href="#recruit">RECRUIT</a></li>
+        <li><a href="#about">ABOUT</a></li>
+        <li><a href="#contact">CONTACT</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">&copy; 2024 Sample Inc. All Rights Reserved.</p>
+    <div class="footer-policy">
+      <a href="#">プライバシーポリシー</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ===== HERO SLIDER =====
+  let currentSlide = 0;
+  const totalSlides = 3;
+
+  function goToSlide(n) {
+    currentSlide = n;
+    document.getElementById('heroSlides').style.transform = `translateX(-${n * (100/3)}%)`;
+    document.querySelectorAll('.hero-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === n);
+    });
+  }
+
+  setInterval(() => {
+    goToSlide((currentSlide + 1) % totalSlides);
+  }, 4000);
+
+  // ===== SCROLL ANIMATION =====
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // ===== NAV BG ON SCROLL =====
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    nav.style.background = window.scrollY > 60
+      ? 'rgba(10,10,10,0.95)'
+      : 'rgba(0,0,0,0.75)';
+  });
+
+  // ===== HAMBURGER =====
+  function toggleMenu(btn) {
+    const links = document.querySelector('.nav-links');
+    const isOpen = links.style.display === 'flex';
+    links.style.cssText = isOpen
+      ? ''
+      : 'display:flex;flex-direction:column;position:fixed;top:70px;left:0;right:0;background:rgba(10,10,10,0.97);padding:24px 20px;gap:20px;';
+    btn.querySelectorAll('span')[0].style.transform = isOpen ? '' : 'rotate(45deg) translate(5px,5px)';
+    btn.querySelectorAll('span')[1].style.opacity = isOpen ? '1' : '0';
+    btn.querySelectorAll('span')[2].style.transform = isOpen ? '' : 'rotate(-45deg) translate(5px,-5px)';
+  }
+
+  // ===== CONTACT FORM =====
+  function handleSubmit(e) {
+    e.preventDefault();
+    alert('お問い合わせを受け付けました。\n2営業日以内にご返信いたします。');
+    e.target.reset();
+  }
+</script>
+</body>
+</html>
