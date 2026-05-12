@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RECRUIT | 株式会社サンプル</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --yellow: #f0c800;
+      --black: #0a0a0a;
+      --dark: #111;
+      --gray: #555;
+      --light-gray: #f5f5f5;
+      --white: #fff;
+      --border: #e0e0e0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+      color: var(--black);
+      background: var(--white);
+      line-height: 1.8;
+    }
+
+    /* ===== NAV ===== */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      height: 64px;
+      background: var(--black);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 28px;
+      text-decoration: none;
+      border-right: 1px solid rgba(255,255,255,0.12);
+      height: 100%;
+    }
+
+    .nav-logo-mark {
+      width: 32px; height: 32px;
+      background: var(--yellow);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 1.1rem; color: var(--black);
+      font-style: italic;
+    }
+
+    .nav-logo-name {
+      color: var(--white);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      margin-left: 32px;
+      gap: 0;
+      flex: 1;
+    }
+
+    .nav-links a {
+      display: block;
+      padding: 0 20px;
+      height: 64px;
+      line-height: 64px;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--white); }
+    .nav-links li:has(a.active) a { border-bottom: 2px solid var(--yellow); }
+
+    .nav-entry {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+
+    .nav-entry a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--yellow);
+      color: var(--black);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      padding: 0 32px;
+      height: 100%;
+      transition: opacity 0.2s;
+    }
+
+    .nav-entry a:hover { opacity: 0.85; }
+
+    /* ===== HERO ===== */
+    #hero {
+      margin-top: 64px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: calc(100vh - 64px);
+      background: var(--black);
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 60px;
+    }
+
+    .hero-title {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.25;
+      margin-bottom: 28px;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-title em {
+      font-style: normal;
+      color: var(--yellow);
+      background: var(--yellow);
+      color: var(--black);
+      padding: 0 4px;
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.9;
+      margin-bottom: 48px;
+    }
+
+    .btn-yellow {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--yellow);
+      color: var(--black);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 16px 32px;
+      transition: opacity 0.2s;
+      width: fit-content;
+    }
+
+    .btn-yellow:hover { opacity: 0.85; }
+
+    .hero-right {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-img {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 40%, #1a2030 100%);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .hero-img-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      opacity: 0.12;
+    }
+
+    .hero-img-m {
+      font-size: 8rem;
+      font-weight: 900;
+      font-style: italic;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    .hero-img-name {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      color: var(--white);
+    }
+
+    /* ===== SECTION LABEL ===== */
+    .s-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .s-title {
+      font-size: clamp(1.5rem, 2.8vw, 2.2rem);
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      line-height: 1.3;
+      margin-bottom: 24px;
+    }
+
+    /* ===== WHY ===== */
+    #why {
+      padding: 90px 60px;
+      background: var(--white);
+    }
+
+    .why-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .why-text p {
+      font-size: 0.92rem;
+      color: var(--gray);
+      line-height: 2;
+    }
+
+    .why-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .stat-icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+      color: var(--gray);
+    }
+
+    .stat-num {
+      font-size: 2.8rem;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-unit {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .stat-desc {
+      font-size: 0.75rem;
+      color: var(--gray);
+      line-height: 1.6;
+      margin-top: 4px;
+    }
+
+    /* ===== MESSAGE ===== */
+    #message {
+      padding: 90px 60px;
+      background: var(--light-gray);
+    }
+
+    .message-inner { max-width: 1100px; margin: 0 auto; }
+
+    .message-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .message-card {
+      background: var(--white);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .message-role {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      color: var(--gray);
+      border: 1px solid var(--border);
+      display: inline-block;
+      padding: 4px 12px;
+      margin-bottom: 12px;
+    }
+
+    .message-name {
+      font-size: 1.6rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      margin-bottom: 20px;
+    }
+
+    .message-text {
+      font-size: 0.85rem;
+      color: var(--gray);
+      line-height: 1.95;
+      margin-bottom: 0;
+    }
+
+    .message-photo {
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 160px; height: 220px;
+      background: linear-gradient(160deg, #1a1a2e, #2d2d5e);
+      display: flex; align-items: flex-end; justify-content: center;
+      overflow: hidden;
+    }
+
+    .message-card:nth-child(2) .message-photo {
+      background: linear-gradient(160deg, #1a2e1a, #2d5e2d);
+    }
+
+    .message-photo-icon {
+      font-size: 5rem;
+      opacity: 0.35;
+      padding-bottom: 8px;
+    }
+
+    .message-card .message-text-wrap {
+      padding-right: 180px;
+    }
+
+    /* ===== INTERVIEW ===== */
+    #interview {
+      padding: 90px 0 90px 60px;
+      background: var(--white);
+      overflow: hidden;
+    }
+
+    .interview-header {
+      max-width: 1100px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-right: 60px;
+      margin-bottom: 40px;
+    }
+
+    .interview-more {
+      font-size: 0.8rem;
+      color: var(--black);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--black);
+      padding-bottom: 2px;
+      transition: opacity 0.2s;
+    }
+
+    .interview-more:hover { opacity: 0.6; }
+
+    .interview-scroll {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      padding-right: 60px;
+      padding-bottom: 16px;
+      scrollbar-width: none;
+      cursor: grab;
+    }
+
+    .interview-scroll::-webkit-scrollbar { display: none; }
+    .interview-scroll:active { cursor: grabbing; }
+
+    .interview-card {
+      flex-shrink: 0;
+      width: 200px;
+      background: var(--black);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .interview-photo {
+      aspect-ratio: 3/4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      opacity: 0.25;
+    }
+
+    .interview-card:nth-child(1) .interview-photo { background: linear-gradient(160deg,#1a1a2e,#2d3060); }
+    .interview-card:nth-child(2) .interview-photo { background: linear-gradient(160deg,#1a2e1a,#2d5e2d); }
+    .interview-card:nth-child(3) .interview-photo { background: linear-gradient(160deg,#2e1a1a,#5e2d2d); }
+    .interview-card:nth-child(4) .interview-photo { background: linear-gradient(160deg,#1a2a2e,#2d4e5e); }
+    .interview-card:nth-child(5) .interview-photo { background: linear-gradient(160deg,#2a1a2e,#4e2d5e); }
+
+    .interview-num {
+      position: absolute;
+      top: 12px; left: 14px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--yellow);
+      letter-spacing: 0.05em;
+    }
+
+    .interview-info {
+      padding: 16px;
+    }
+
+    .interview-quote {
+      font-size: 0.78rem;
+      color: var(--white);
+      line-height: 1.65;
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+
+    .interview-dept {
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.6;
+    }
+
+    /* ===== INFO CARDS ===== */
+    #info {
+      padding: 80px 60px;
+      background: var(--light-gray);
+    }
+
+    .info-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .info-card {
+      background: var(--white);
+      padding: 48px 36px;
+    }
+
+    .info-icon {
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .info-en {
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+    }
+
+    .info-ja {
+      font-size: 0.72rem;
+      color: var(--yellow);
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--yellow);
+      display: inline-block;
+      padding-bottom: 2px;
+    }
+
+    .info-desc {
+      font-size: 0.83rem;
+      color: var(--gray);
+      line-height: 1.85;
+      margin-bottom: 28px;
+    }
+
+    .info-more {
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--black);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      transition: gap 0.2s;
+    }
+
+    .info-more:hover { gap: 16px; }
+
+    .info-more::after {
+      content: '→';
+      font-size: 0.9rem;
+    }
+
+    /* ===== CTA FOOTER ===== */
+    .cta-footer {
+      background: var(--black);
+      padding: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .cta-footer-left .cta-title {
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      font-weight: 900;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .cta-footer-left .cta-sub {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.55);
+    }
+
+    /* ===== SCROLL ANIMATION ===== */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      #hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .why-inner { grid-template-columns: 1fr; gap: 48px; }
+      .why-stats { grid-template-columns: repeat(3, 1fr); }
+      .message-grid { grid-template-columns: 1fr; }
+      .info-grid { grid-template-columns: 1fr; }
+      .cta-footer { flex-direction: column; gap: 32px; text-align: center; }
+      #hero, #why, #message, #interview, #info, .cta-footer { padding-left: 28px; padding-right: 28px; }
+      #interview { padding-left: 28px; }
+      .interview-header { padding-right: 28px; }
+      .interview-scroll { padding-right: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-mark">M</div>
+    <span class="nav-logo-name">SAMPLE</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#hero">TOP</a></li>
+    <li><a href="index.html#about">ABOUT</a></li>
+    <li><a href="#message">PEOPLE</a></li>
+    <li><a href="#info">WORKSTYLE</a></li>
+    <li><a href="#" class="active">RECRUIT</a></li>
+  </ul>
+  <div class="nav-entry">
+    <a href="#entry">ENTRY &nbsp;→</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-left fade-up">
+    <h1 class="hero-title">
+      AI時代の変革を、<br>
+      <em>"実装"</em>する側へ。
+    </h1>
+    <p class="hero-sub">
+      戦略から実行まで。<br>
+      最先端技術で、社会にインパクトを。
+    </p>
+    <a href="#why" class="btn-yellow">私たちについて &nbsp;→</a>
+  </div>
+  <div class="hero-right">
+    <div class="hero-img">
+      <div class="hero-img-logo">
+        <div class="hero-img-m">M</div>
+        <div class="hero-img-name">SAMPLE</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why">
+  <div class="why-inner">
+    <div class="why-text">
+      <p class="s-label fade-up">WHY SAMPLE?</p>
+      <h2 class="s-title fade-up">AI × DXで、未来を実装する<br>パートナーに。</h2>
+      <p class="fade-up">
+        私たちは、AI・Web3等の最先端技術にコンサルティングを融け合わせ、
+        企業のDX推進や新規事業創出を支援するスタートアップです。
+        少数精鋭のプロフェッショナル集団として、戦略立案から実装・定着まで一気通貫で伴走し、
+        クライアントの変革を"結果"で終わらせます。
+      </p>
+    </div>
+    <div class="why-stats">
+      <div class="stat-item fade-up">
+        <span class="stat-icon">👥</span>
+        <div>
+          <span class="stat-num">20</span><span class="stat-unit">名</span>
+        </div>
+        <p class="stat-desc">プロフェッショナルが<br>在籍</p>
+      </div>
+      <div class="stat-item fade-up">
+        <span class="stat-icon">📈</span>
+        <div>
+          <span class="stat-num">28</span><span class="stat-unit">歳</span>
+        </div>
+        <p class="stat-desc">平均年齢<br>若手が中心に活躍</p>
+      </div>
+      <div class="stat-item fade-up">
+        <span class="stat-icon">🚀</span>
+        <div>
+          <span class="stat-num">100</span><span class="stat-unit">+</span>
+        </div>
+        <p class="stat-desc">プロジェクト数<br>DX・新規事業を支援</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MESSAGE -->
+<section id="message">
+  <div class="message-inner">
+    <p class="s-label fade-up">MESSAGE</p>
+    <h2 class="s-title fade-up">入社ご希望の皆様へ</h2>
+    <div class="message-grid">
+
+      <div class="message-card fade-up">
+        <div class="message-text-wrap">
+          <span class="message-role">代表取締役社長 CEO</span>
+          <p class="message-name">山田 太郎</p>
+          <p class="message-text">
+            今日、企業の価値創造の鍵は、DXであると言えます。
+            テクノロジーの進化により、ビジネスの効率化やビジネスモデルの
+            変革が飛躍的に進展し、企業の新陳代謝や業界の再編が各所で
+            起こっています。<br><br>
+            そのような時代に、企業のDXの推進をご支援するため、当社が
+            誕生しました。当社は、設立当初からデジタルを前提としたコンサルティング会社として、ビジネスとテクノロジーを融合させ、総合商社事業会社での活用したハンズオン支援に取り組んできます。
+          </p>
+        </div>
+        <div class="message-photo">
+          <div class="message-photo-icon">👤</div>
+        </div>
+      </div>
+
+      <div class="message-card fade-up">
+        <div class="message-text-wrap">
+          <span class="message-role">取締役 COO</span>
+          <p class="message-name">鈴木 花子</p>
+          <p class="message-text">
+            当社は2021年に設立したコンサルティングファームです。
+            戦略・ビジネス・DX・IT・マネジメントサービスの各領域において、
+            国内外のお客様に対する支援実績を着実に積み上げてまいりました。<br><br>
+            大手ファームとは一線を画す「スピード感」と
+            「実現・実行への強い拘り」を強みとしており、量産を持って
+            変革の現場に挑める環境があります。
+            自らの成長と進化を追求しつつ、共に確かなインパクトを創出していく
+            熱意ある仲間を当社はこれからもお待ちしております。
+          </p>
+        </div>
+        <div class="message-photo">
+          <div class="message-photo-icon">👤</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- INTERVIEW -->
+<section id="interview">
+  <div class="interview-header fade-up">
+    <div>
+      <p class="s-label">INTERVIEW</p>
+      <h2 class="s-title">社員インタビュー</h2>
+    </div>
+    <a href="#" class="interview-more">すべてのインタビューを見る &nbsp;→</a>
+  </div>
+  <div class="interview-scroll" id="interviewScroll">
+
+    <div class="interview-card">
+      <div class="interview-num">01</div>
+      <div class="interview-photo">👤</div>
+      <div class="interview-info">
+        <p class="interview-quote">自ら<br>議論を結果を繋げる</p>
+        <p class="interview-dept">ビジネスプロデュース＆<br>トランスフォーメーション本部<br>コンサルタント</p>
+      </div>
+    </div>
+
+    <div class="interview-card">
+      <div class="interview-num">02</div>
+      <div class="interview-photo">👤</div>
+      <div class="interview-info">
+        <p class="interview-quote">多様な知見を持つ仲間と<br>続業の課題解決ができ<br>知的好奇心が刺激される</p>
+        <p class="interview-dept">ビジネスプロデュース＆<br>トランスフォーメーション本部<br>コンサルタント</p>
+      </div>
+    </div>
+
+    <div class="interview-card">
+      <div class="interview-num">03</div>
+      <div class="interview-photo">👤</div>
+      <div class="interview-info">
+        <p class="interview-quote">国家公務員から転身<br>当事者意識で<br>顧客に寄り添う伴走支援</p>
+        <p class="interview-dept">IT戦略＆サイバー本部<br>コンサルタント</p>
+      </div>
+    </div>
+
+    <div class="interview-card">
+      <div class="interview-num">04</div>
+      <div class="interview-photo">👤</div>
+      <div class="interview-info">
+        <p class="interview-quote">商社の複雑性高い案件で<br>実行支援まで顧客に伴走<br>コンサルとして成長実感</p>
+        <p class="interview-dept">サステナブルグロース＆<br>レジリエンス戦略本部<br>コンサルタント</p>
+      </div>
+    </div>
+
+    <div class="interview-card">
+      <div class="interview-num">05</div>
+      <div class="interview-photo">👤</div>
+      <div class="interview-info">
+        <p class="interview-quote">総合商社のアセットと<br>コンサルの掛け合わせで<br>ビジネス変革の現場を楽しむ</p>
+        <p class="interview-dept">IT戦略＆サイバー本部<br>シニアマネージャー</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- INFO -->
+<section id="info">
+  <div class="info-grid">
+
+    <div class="info-card fade-up">
+      <span class="info-icon">💼</span>
+      <p class="info-en">WORKSTYLE</p>
+      <p class="info-ja">働き方・制度</p>
+      <p class="info-desc">社員の働きやすさ、働きがい向上のための様々な制度や育成の仕組みをご紹介します。</p>
+      <a href="#" class="info-more">VIEW MORE</a>
+    </div>
+
+    <div class="info-card fade-up">
+      <span class="info-icon">👥</span>
+      <p class="info-en">RECRUIT</p>
+      <p class="info-ja">募集要項</p>
+      <p class="info-desc">募集職種・募集要項・よくある質問はこちらから詳細をご確認ください。</p>
+      <a href="#entry" class="info-more">VIEW MORE</a>
+    </div>
+
+    <div class="info-card fade-up">
+      <span class="info-icon">📋</span>
+      <p class="info-en">FAQ</p>
+      <p class="info-ja">よくあるご質問</p>
+      <p class="info-desc">応募前に多いただくご質問をまとめています。</p>
+      <a href="#" class="info-more">VIEW MORE</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA FOOTER -->
+<div class="cta-footer" id="entry">
+  <div class="cta-footer-left fade-up">
+    <p class="cta-title">未来を、私たちと一緒に。</p>
+    <p class="cta-sub">私たちは、共に未来を創る仲間を募集しています。</p>
+  </div>
+  <a href="#" class="btn-yellow fade-up">エントリーする &nbsp;→</a>
+</div>
+
+<script>
+  // scroll animation
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // drag scroll
+  const scroll = document.getElementById('interviewScroll');
+  let isDragging = false, startX, scrollLeft;
+  scroll.addEventListener('mousedown', e => { isDragging = true; startX = e.pageX - scroll.offsetLeft; scrollLeft = scroll.scrollLeft; });
+  scroll.addEventListener('mouseleave', () => isDragging = false);
+  scroll.addEventListener('mouseup', () => isDragging = false);
+  scroll.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    e.preventDefault();
+    scroll.scrollLeft = scrollLeft - (e.pageX - scroll.offsetLeft - startX);
+  });
+</script>
+</body>
+</html>
